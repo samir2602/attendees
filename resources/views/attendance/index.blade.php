@@ -76,9 +76,12 @@
                                         {{ min_to_hour($attendance->sum('working_hours')) }}
                                     </th>
                                     <th class="px-6 py-4">{{ $attendance->sum('day_pay') }} Rs</th>
-                                    <th class="px-6 py-4">                                        
-                                        <p><span class="bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 my-1 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">{{ min_to_hour($attendance->sum('over_time')) }}</span></p>
-                                        <p><span class="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">{{ min_to_hour($attendance->sum('under_time')) }}</span></p>
+                                    <th class="px-6 py-4">
+                                        @if($attendance->sum('over_time') > $attendance->sum('under_time'))
+                                        <p><span class="bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 my-1 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">{{ $attendance->sum('over_time') - $attendance->sum('under_time') }}</span></p>
+                                        @else
+                                        <p><span class="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">{{ $attendance->sum('under_time') - $attendance->sum('over_time') }}</span></p>
+                                        @endif
                                     </th>
                                 </tr>
                             </tbody>

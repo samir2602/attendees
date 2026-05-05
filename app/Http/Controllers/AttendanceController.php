@@ -12,7 +12,7 @@ class AttendanceController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {        
+    {
         $month = (isset($_GET['month'])) ? $_GET['month'] : date('Y-m');
         $attendance = Attendance::where('date', 'like', "%$month%")->orderBy('date', 'asc')->get();
         return view('attendance.index', compact('attendance'));
