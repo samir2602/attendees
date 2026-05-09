@@ -17,8 +17,7 @@ return new class extends Migration
             $table->time('work_in')->nullable();
             $table->time('work_out')->nullable();
             $table->integer('break_hours')->nullable();
-            $table->integer('working_hours')->nullable();
-            $table->decimal('day_pay', 10, 2)->nullable();
+            $table->integer('working_hours')->nullable();            
             $table->string('over_time')->nullable();
             $table->string('under_time')->nullable();            
             $table->timestamps();

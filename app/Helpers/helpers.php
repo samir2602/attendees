@@ -30,8 +30,8 @@ if (!function_exists('day_pay')){
         }
         $working_days = $days_in_month - $count; // this month current working day
         $working_hours = $working_days * 8; // this month current working hours
-        $daily_pay = 30000 / $working_days; // this month payable amount by day
-        $hourly_pay = (30000 / $working_hours); // this month payable amount by hours
+        $daily_pay = 26667 / $working_days; // this month payable amount by day
+        $hourly_pay = (26667 / $working_hours); // this month payable amount by hours
         $start = new DateTime($work_in);
         $end = new DateTime($work_out);
         $interval = $start->diff($end);

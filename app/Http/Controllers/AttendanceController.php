@@ -38,8 +38,7 @@ class AttendanceController extends Controller
             $data['break_hours'] = '0';
             $data['working_hours'] = '0';
             $data['over_time'] = '0';
-            $data['under_time'] = '480';
-            $data['day_pay'] = '0';
+            $data['under_time'] = '480';            
             $is_entry = Attendance::where('date', $request['date'])->first();
             if($is_entry){
                 Attendance::where('date', $request['date'])->update($data);
@@ -64,21 +63,17 @@ class AttendanceController extends Controller
         }
         
         $working_days = $days_in_current_month - $count; // this month current working day
-        $working_hours = $working_days * 8; // this month current working hours
-        $daily_pay = 30000 / $working_days; // this month payable amount by day
-        $hourly_pay = (30000 / $working_hours); // this month payable amount by hours
+        $working_hours = $working_days * 8; // this month current working hours        
         $start = new DateTime($data['work_in']);
         $end = new DateTime($data['work_out']);
         $interval = $start->diff($end);
         $working_hours = $interval->format('%H:%I'); // total working hours of the day
         list($hours, $minutes) = explode(":", $working_hours);
-        $total_working_minutes = ($hours * 60) + $minutes - $data['break_hours'];  // total working minutes of the day        
-        $day_pay = ($hourly_pay / 60) * $total_working_minutes; // total payable amount of the day        
+        $total_working_minutes = ($hours * 60) + $minutes - $data['break_hours'];  // total working minutes of the day                
 
         $is_entry = Attendance::where('date', $data['date'])->first();
         if($is_entry){
-            $update_data = $request->except('_token','day');
-            $update_data['day_pay'] = $day_pay;
+            $update_data = $request->except('_token','day');            
             if($total_working_minutes > 480){
                 $update_data['under_time'] = 0;
                 $update_data['over_time'] = $total_working_minutes - 480;
@@ -88,8 +83,7 @@ class AttendanceController extends Controller
             }
             $update_data['working_hours'] = $total_working_minutes;
             Attendance::where('date', $data['date'])->update($update_data);
-        }else{
-            $data['day_pay'] = $day_pay;
+        }else{            
             if($total_working_minutes > 480){
                 $data['under_time'] = 0;
                 $data['over_time'] = $total_working_minutes - 480;
@@ -131,8 +125,7 @@ class AttendanceController extends Controller
             $leave['break_hours'] = '00:00';
             $leave['working_hours'] = '00:00';
             $leave['over_time'] = '0';
-            $leave['under_time'] = '480';
-            $leave['day_pay'] = '0';
+            $leave['under_time'] = '480';            
             if($is_entry){
                 Attendance::where('date', $request['date'])->update($leave);
                 return redirect()->route('dashboard');
@@ -154,19 +147,15 @@ class AttendanceController extends Controller
         }
         
         $working_days = $days_in_current_month - $count; // this month current working day
-        $working_hours = $working_days * 8; // this month current working hours
-        $daily_pay = 30000 / $working_days; // this month payable amount by day
-        $hourly_pay = (30000 / $working_hours); // this month payable amount by hours
+        $working_hours = $working_days * 8; // this month current working hours        
         $start = new DateTime($data['work_in']);
         $end = new DateTime($data['work_out']);
         $interval = $start->diff($end);
         $working_hours = $interval->format('%H:%I'); // total working hours of the day
         list($hours, $minutes) = explode(":", $working_hours);
         $working_hours = ($hours - 1).':'.$minutes;        
-        $total_working_minutes = ($hours * 60) + $minutes - $data['break_hours'];  // total working minutes of the day
-        $day_pay = ($hourly_pay / 60) * $total_working_minutes; // total payable amount of the day        
+        $total_working_minutes = ($hours * 60) + $minutes - $data['break_hours'];  // total working minutes of the day        
 
-        $data['day_pay'] = $day_pay;
         if($total_working_minutes > 480){
             $data['under_time'] = 0;
             $data['over_time'] = $total_working_minutes - 480;

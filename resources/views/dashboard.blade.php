@@ -50,9 +50,18 @@
             </div>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <p>Payable amount</p>                    
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                        {{ $records->sum('day_pay') }} Rs.
+                    <p>Payable amount</p>
+                    @php
+                    $total_pay = 0;    
+                    @endphp
+                    @foreach ($records as $item)
+                        @php
+                        $total_pay += day_pay($item['date'], $item['work_in'], $item['work_out'], $item['break_hours']);
+                        @endphp
+                    @endforeach
+                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">                        
+                        <p>Basic Pay: {{ $total_pay }} Rs.</p>
+                        <p>Total Pay: {{ $total_pay + 3333}} Rs.</p>
                     </h2>                    
                 </div>
                 <div class="p-6 text-gray-900">

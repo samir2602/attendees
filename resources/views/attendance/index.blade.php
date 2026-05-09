@@ -31,7 +31,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($attendance as $item)                                
+                                @php
+                                $total_pay = 0;
+                                @endphp
+                                @foreach ($attendance as $item)
                                 <tr class="bg-neutral-primary border-b border-default">
                                     <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">{{date('M, d, Y, D', strtotime($item['date'])) }}</th>
                                     <th class="px-6 py-4">{{ ($item['work_in'] != '00:00:00') ? date("h:i:s a", strtotime($item['work_in'])) : '-'}}</th>
@@ -45,7 +48,9 @@
                                     </th>
                                     <th class="px-6 py-4">{{ $item->workinghours() }}</th>
                                     <th class="px-6 py-4">{{ day_pay($item['date'], $item['work_in'], $item['work_out'], $item['break_hours']) }} </th>
-                                    {{-- <th class="px-6 py-4">{{ $item['day_pay']}}</th> --}}
+                                    @php
+                                    $total_pay += day_pay($item['date'], $item['work_in'], $item['work_out'], $item['break_hours']);    
+                                    @endphp                                    
                                     <th class="px-6 py-4">
                                         @if ($item['over_time'])                                    
                                         <span class="bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">{{$item['over_time']}}</span>
@@ -75,7 +80,11 @@
                                     <th class="px-6 py-4">
                                         {{ min_to_hour($attendance->sum('working_hours')) }}
                                     </th>
-                                    <th class="px-6 py-4">{{ $attendance->sum('day_pay') }} Rs</th>
+                                    {{-- <th class="px-6 py-4">{{ $attendance->sum('day_pay') }} Rs</th> --}}
+                                    <th class="px-6 py-4">
+                                        <p>BA: {{ $total_pay }} Rs.</p>
+                                        <p>TA: {{ $total_pay + 3333 }} Rs.</p>
+                                    </th>
                                     <th class="px-6 py-4">
                                         @if($attendance->sum('over_time') > $attendance->sum('under_time'))
                                         <p><span class="bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 my-1 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">{{ $attendance->sum('over_time') - $attendance->sum('under_time') }}</span></p>
